@@ -26,9 +26,7 @@ export function UpdateInvoice({ id }: { id: string }) {
 }
 
 export function DeleteInvoice({ id }: { id: string }) {
-  const deleteInvoiceWithId = async (formData: FormData): Promise<void> => {
-    await deleteInvoice(id);
-  };
+  const deleteInvoiceWithId = deleteInvoice.bind(null, id);
 
   return (
     <form action={deleteInvoiceWithId}>

@@ -15,7 +15,7 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
-export async function createInvoice(formData: FormData): Promise<void> {
+export async function createInvoice(formData: FormData): Promise<any> {
   const { customerId, amount, status } = CreateInvoice.parse({
     customerId: formData.get("customerId"),
     amount: formData.get("amount"),
@@ -26,15 +26,15 @@ export async function createInvoice(formData: FormData): Promise<void> {
 
   try {
     await sql`
-  INSERT INTO invoices (customer_id, amount, status, date)
-  VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-`;
+      INSERT INTO invoices (customer_id, amount, status, date)
+      VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+    `;
   } catch (error) {
-    {
-      message: "Database Error: Failed to Create Invoice.";
-    }
-    return;
+    return {
+      message: "Database Error: Failed to Create Invoice.",
+    };
   }
+
   revalidatePath("/dashboard/invoices");
   redirect("/dashboard/invoices");
 }
